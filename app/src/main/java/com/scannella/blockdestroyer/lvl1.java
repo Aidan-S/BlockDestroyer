@@ -7,7 +7,19 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+
 public class lvl1 extends AppCompatActivity {
+
+    private Boolean paused = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +43,11 @@ public class lvl1 extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.itmBack) {
+            Intent intent = new Intent(lvl1.this,MainActivity.class);
+            startActivity(intent);
+        }
+
+        if (id == R.id.itmReset) {
             Intent intent = new Intent(lvl1.this,MainActivity.class);
             startActivity(intent);
         }

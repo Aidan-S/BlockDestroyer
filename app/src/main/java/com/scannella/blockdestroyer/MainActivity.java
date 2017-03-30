@@ -1,6 +1,7 @@
 package com.scannella.blockdestroyer;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,48 +20,27 @@ public class MainActivity extends AppCompatActivity {
 
 
         Button button1 = (Button) findViewById(R.id.btnLvl1);
-        //when button is clicked
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setButtonRandomPosition();
-                if(play.isPlaying()) {
-                    play.pause();
-                    play.seekTo(0);
-                }
-                play.start();
-
-                word.setText("You Got Me");
+                Intent intent = new Intent(MainActivity.this, lvl1.class);
+                startActivity(intent);
             }
         });
         Button button2 = (Button) findViewById(R.id.btnLvl2);
-        //when button is clicked
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setButtonRandomPosition();
-                if(play.isPlaying()) {
-                    play.pause();
-                    play.seekTo(0);
-                }
-                play.start();
-
-                word.setText("You Got Me");
+                Intent intent = new Intent(MainActivity.this, lvl1.class);
+                startActivity(intent);
             }
         });
         Button button3 = (Button) findViewById(R.id.btnLvl3);
-        //when button is clicked
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setButtonRandomPosition();
-                if(play.isPlaying()) {
-                    play.pause();
-                    play.seekTo(0);
-                }
-                play.start();
-
-                word.setText("You Got Me");
+                Intent intent = new Intent(MainActivity.this, lvl1.class);
+                startActivity(intent);
             }
         });
     }

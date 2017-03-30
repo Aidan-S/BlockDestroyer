@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.scannella.blockdestroyer.lvl1">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="29dp"
+        android:layout_height="29dp"
+        app:srcCompat="@drawable/ball"
+        tools:layout_editor_absoluteX="178dp"
+        tools:layout_editor_absoluteY="379dp" />
 </android.support.constraint.ConstraintLayout>
