@@ -1,6 +1,7 @@
 package com.scannella.blockdestroyer;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,6 +26,15 @@ public class lvl1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lvl1);
+
+
+        // Declare an object of type Bitmap
+        Bitmap blankBitmap;
+        // Make it 600 x 600 pixels in size and an appropriate format
+        blankBitmap = Bitmap.createBitmap(600,600,Bitmap.Config.ARGB_8888);
+        // Declare an object of type canvas
+        Canvas canvas = new Canvas(blankBitmap);
+
     }
 
     @Override
