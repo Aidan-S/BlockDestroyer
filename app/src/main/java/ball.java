@@ -2,5 +2,5 @@
  * Created by scannella on 4/5/2017.
  */
 
-public class ball {
+public class Ball {
 }
