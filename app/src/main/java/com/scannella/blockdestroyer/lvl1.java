@@ -28,12 +28,16 @@ public class lvl1 extends AppCompatActivity {
         setContentView(R.layout.activity_lvl1);
 
 
-        // Declare an object of type Bitmap
-        Bitmap blankBitmap;
-        // Make it 600 x 600 pixels in size and an appropriate format
-        blankBitmap = Bitmap.createBitmap(600,600,Bitmap.Config.ARGB_8888);
-        // Declare an object of type canvas
+        // Declare a Bitmap
+        Bitmap blankBitmap = Bitmap.createBitmap(600,600,Bitmap.Config.ARGB_8888);
+        // Declare a canvas
         Canvas canvas = new Canvas(blankBitmap);
+
+        // Declare an object of type Paint
+        Paint paint = new Paint();
+
+        paint.setColor(Color.argb(255,  26, 128, 182));
+        canvas.drawRect(50,450,500,550,paint);
 
     }
 
