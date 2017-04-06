@@ -22,6 +22,7 @@ public class lvl1 extends AppCompatActivity {
 
     private Boolean paused = true;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +50,8 @@ public class lvl1 extends AppCompatActivity {
         return true;
     }
 
+
+
     @Override
     //when item is selected
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -65,6 +68,12 @@ public class lvl1 extends AppCompatActivity {
             Intent intent = new Intent(lvl1.this,MainActivity.class);
             startActivity(intent);
         }
+
+        if (id == R.id.itmPause) {
+            Intent intent = new Intent(lvl1.this,MainActivity.class);
+            startActivity(intent);
+        }
+
 
         return super.onOptionsItemSelected(item);
 

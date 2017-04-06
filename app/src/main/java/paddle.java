@@ -1,7 +1,3 @@
-/**
- * Created by scannella on 4/5/2017.
- */
-
 import android.graphics.RectF;
 
 public class Paddle {
@@ -24,11 +20,11 @@ public class Paddle {
 
     //Ways paddle can move
     public final int STOPPED = 0;
-    public final int LEFT = 1;
-    public final int RIGHT = 2;
+    public final int RIGHT = 1;
+    public final int LEFT = 2;
 
     //Direction the paddle is moving
-    private int paddleMoving = STOPPED;
+    private int paddleDirection = STOPPED;
 
     //Constructor
     public Paddle(int screenX, int screenY) {
@@ -51,17 +47,17 @@ public class Paddle {
     }
 
     //setter
-    public void setMovement(int direction) {
-        paddleMoving = direction;
+    public void setDirection(int direction) {
+        paddleDirection = direction;
     }
 
-//update, will update when the paddle needs to change direction
+    //update, will update when the paddle needs to change direction
     public void update(long fps) {
-        if (paddleMoving == LEFT) {
+        if (paddleDirection == LEFT) {
             side = side - paddleSpeed / fps;
         }
 
-        if (paddleMoving == RIGHT) {
+        if (paddleDirection == RIGHT) {
             side = side + paddleSpeed / fps;
         }
 
