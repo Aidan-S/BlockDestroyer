@@ -31,16 +31,16 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, lvl1.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(MainActivity.this, lvl1.class);
+                startActivity(intent);*/
             }
         });
         Button button3 = (Button) findViewById(R.id.btnLvl3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, lvl1.class);
-                startActivity(intent);
+                /*Intent intent = new Intent(MainActivity.this, lvl1.class);
+                startActivity(intent);*/
             }
         });
     }
