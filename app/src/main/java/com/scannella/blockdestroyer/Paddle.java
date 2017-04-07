@@ -1,4 +1,7 @@
+package com.scannella.blockdestroyer;
+
 import android.graphics.RectF;
+
 
 public class Paddle {
 

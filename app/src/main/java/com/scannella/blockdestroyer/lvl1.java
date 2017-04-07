@@ -1,9 +1,12 @@
 package com.scannella.blockdestroyer;
 
+
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +24,16 @@ import android.view.SurfaceView;
 public class lvl1 extends AppCompatActivity {
 
     private Boolean paused = true;
+    // The player's paddle
+    int screenX = getResources().getDisplayMetrics().widthPixels;
+    int screenY = getResources().getDisplayMetrics().heightPixels;
 
+
+    SurfaceHolder ourHolder;
+
+    Canvas canvas;
+    Paint paint;
+    Paddle paddle = new Paddle(screenX, screenY);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +42,7 @@ public class lvl1 extends AppCompatActivity {
 
 
         // Declare a Bitmap
-        Bitmap blankBitmap = Bitmap.createBitmap(600,600,Bitmap.Config.ARGB_8888);
+        Bitmap blankBitmap = Bitmap.createBitmap(screenX,screenY,Bitmap.Config.ARGB_8888);
         // Declare a canvas
         Canvas canvas = new Canvas(blankBitmap);
 
@@ -39,6 +51,30 @@ public class lvl1 extends AppCompatActivity {
 
         paint.setColor(Color.argb(255,  26, 128, 182));
         canvas.drawRect(50,450,500,550,paint);
+
+
+    }
+
+
+
+    public void draw() {
+
+
+        if (ourHolder.getSurface().isValid()) {
+            // Ready the canvas
+            canvas = ourHolder.lockCanvas();
+
+            // Draw the background color
+            canvas.drawColor(Color.argb(255,  26, 128, 182));
+
+            // Choose the brush color for drawing
+            paint.setColor(Color.argb(255,  255, 255, 255));
+
+
+
+            // Draw everything
+            ourHolder.unlockCanvasAndPost(canvas);
+        }
 
     }
 
@@ -50,6 +86,35 @@ public class lvl1 extends AppCompatActivity {
         return true;
     }
 
+    // The SurfaceView class implements onTouchListener
+    // So we can override this method and detect screen touches.
+    @Override
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+
+            // Player has touched the screen
+            case MotionEvent.ACTION_DOWN:
+
+                paused = false;
+
+                if(motionEvent.getX() > screenX / 2){
+                    paddle.setDirection(paddle.RIGHT);
+                }
+                else{
+                    paddle.setDirection(paddle.LEFT);
+                }
+
+                break;
+
+            // Player has removed finger from screen
+            case MotionEvent.ACTION_UP:
+
+                paddle.setDirection(paddle.STOPPED);
+                break;
+        }
+        return true;
+    }
 
 
     @Override
