@@ -4,9 +4,11 @@ package com.scannella.blockdestroyer;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,14 +22,26 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.ImageView;
 
-public class lvl1 extends AppCompatActivity {
+public class lvl1 extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener  {
 
     private Boolean paused = true;
     // The player's paddle
     int screenX = getResources().getDisplayMetrics().widthPixels;
     int screenY = getResources().getDisplayMetrics().heightPixels;
 
+
+    /*private GestureDetector gestureDetector;
+
+    public lvl1(Context c) {
+        gestureDetector = new GestureDetector(c, new GestureListener());
+    }
+
+    public boolean onTouch(final View view, final MotionEvent motionEvent) {
+        return gestureDetector.onTouchEvent(motionEvent);
+    }*/
 
     SurfaceHolder ourHolder;
 
@@ -40,6 +54,9 @@ public class lvl1 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lvl1);
 
+        //prepares gestures
+        this.GestureDetector = new GestureDetectorCompat(this, this);
+        GestureDetector.setOnDoubleTapListener(this);
 
         // Declare a Bitmap
         Bitmap blankBitmap = Bitmap.createBitmap(screenX,screenY,Bitmap.Config.ARGB_8888);
@@ -86,35 +103,37 @@ public class lvl1 extends AppCompatActivity {
         return true;
     }
 
-    // The SurfaceView class implements onTouchListener
-    // So we can override this method and detect screen touches.
-    @Override
-    public boolean onTouchEvent(MotionEvent motionEvent) {
+   /* private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-
-            // Player has touched the screen
-            case MotionEvent.ACTION_DOWN:
-
-                paused = false;
-
-                if(motionEvent.getX() > screenX / 2){
-                    paddle.setDirection(paddle.RIGHT);
-                }
-                else{
-                    paddle.setDirection(paddle.LEFT);
-                }
-
-                break;
-
-            // Player has removed finger from screen
-            case MotionEvent.ACTION_UP:
-
-                paddle.setDirection(paddle.STOPPED);
-                break;
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return super.onSingleTapConfirmed(e);
         }
-        return true;
-    }
+
+        public void onSwipeRight() {
+
+        }
+        public void onSwipeLeft() {
+
+        }
+        public void onSwipeTop() {
+
+        }
+        public void onSwipeBottom() {
+
+        }
+        public void onClick(){
+
+        }
+
+        public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+        }
+
+    }*/
+
+
+
+
 
 
     @Override

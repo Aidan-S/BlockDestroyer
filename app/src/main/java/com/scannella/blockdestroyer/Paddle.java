@@ -36,7 +36,7 @@ public class Paddle {
 
         //put paddle in the middle
         side = screenX / 2;
-        top = screenY - 20;
+        top = screenY - 25;
 
         rect = new RectF(side, top, side + width, top + height);
 
