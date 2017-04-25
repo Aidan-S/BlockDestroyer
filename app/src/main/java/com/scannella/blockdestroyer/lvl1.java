@@ -25,75 +25,39 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
 
+
 public class lvl1 extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener  {
 
-    private Boolean paused = true;
+
     // The player's paddle
-    int screenX = getResources().getDisplayMetrics().widthPixels;
-    int screenY = getResources().getDisplayMetrics().heightPixels;
+    float screenX = getResources().getDisplayMetrics().widthPixels;
+    float screenY = getResources().getDisplayMetrics().heightPixels;
 
+    private GestureDetectorCompat GestureDetector;
 
-    /*private GestureDetector gestureDetector;
-
-    public lvl1(Context c) {
-        gestureDetector = new GestureDetector(c, new GestureListener());
-    }
-
-    public boolean onTouch(final View view, final MotionEvent motionEvent) {
-        return gestureDetector.onTouchEvent(motionEvent);
-    }*/
 
     SurfaceHolder ourHolder;
 
     Canvas canvas;
     Paint paint;
-    Paddle paddle = new Paddle(screenX, screenY);
+    //Paddle paddle = new Paddle(screenX, screenY);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lvl1);
 
+
         //prepares gestures
         this.GestureDetector = new GestureDetectorCompat(this, this);
         GestureDetector.setOnDoubleTapListener(this);
 
-        // Declare a Bitmap
-        Bitmap blankBitmap = Bitmap.createBitmap(screenX,screenY,Bitmap.Config.ARGB_8888);
-        // Declare a canvas
-        Canvas canvas = new Canvas(blankBitmap);
-
-        // Declare an object of type Paint
-        Paint paint = new Paint();
-
-        paint.setColor(Color.argb(255,  26, 128, 182));
-        canvas.drawRect(50,450,500,550,paint);
-
 
     }
 
 
 
-    public void draw() {
 
-
-        if (ourHolder.getSurface().isValid()) {
-            // Ready the canvas
-            canvas = ourHolder.lockCanvas();
-
-            // Draw the background color
-            canvas.drawColor(Color.argb(255,  26, 128, 182));
-
-            // Choose the brush color for drawing
-            paint.setColor(Color.argb(255,  255, 255, 255));
-
-
-
-            // Draw everything
-            ourHolder.unlockCanvasAndPost(canvas);
-        }
-
-    }
 
     @Override
     //create pull down options menu
@@ -103,33 +67,20 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
         return true;
     }
 
-   /* private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
-        public boolean onSingleTapConfirmed(MotionEvent e) {
-            return super.onSingleTapConfirmed(e);
+    // Assign the touch listener to your view which you want to move
+
+
+    // This defines your touch listener
+
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+
+                return true;
+            } else {
+                return false;
+            }
         }
-
-        public void onSwipeRight() {
-
-        }
-        public void onSwipeLeft() {
-
-        }
-        public void onSwipeTop() {
-
-        }
-        public void onSwipeBottom() {
-
-        }
-        public void onClick(){
-
-        }
-
-        public boolean onTouch(View v, MotionEvent event) {
-        return gestureDetector.onTouchEvent(event);
-        }
-
-    }*/
 
 
 
@@ -162,6 +113,70 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
         return super.onOptionsItemSelected(item);
 
     }
+
+    //gesture methods for when the player misses and taps the screen
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) { return false; }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {return false;}
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        /*float x = e.getX();
+        float y = e.getY();
+        if(x < screenX){
+            switch (e.getAction()) {
+                case e.ACTION_DOWN:
+                    // Write your code to perform an action on down
+                    break;
+                case e.ACTION_MOVE:
+
+                     break;
+                case e.ACTION_UP:
+                    // Write your code to perform an action on touch up
+                    break;
+            }
+        }
+        return true;*/
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {}
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
+        return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        GestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
+    }
+
 
 
 }
