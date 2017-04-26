@@ -68,4 +68,8 @@ public class Paddle {
         rect.right = side + width;
     }
 
+    public void setX(int distance, int direction){
+
+    }
+
 }

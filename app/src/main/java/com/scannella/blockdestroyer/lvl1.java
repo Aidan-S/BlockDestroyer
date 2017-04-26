@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 
@@ -35,17 +36,26 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
 
     private GestureDetectorCompat GestureDetector;
 
+    private ImageView paddle;
 
-    SurfaceHolder ourHolder;
+
+    /*SurfaceHolder ourHolder;
 
     Canvas canvas;
     Paint paint;
-    //Paddle paddle = new Paddle(screenX, screenY);
+    Paddle paddle = new Paddle(screenX, screenY);*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lvl1);
+
+        paddle = (ImageView) findViewById(R.id.imgPaddle);
+
+        FrameLayout frame = (FrameLayout) findViewById(R.id.graphics_holder);
+        PlayAreaView image = new PlayAreaView(this);
+        frame.addView(paddle);
+
 
 
         //prepares gestures
