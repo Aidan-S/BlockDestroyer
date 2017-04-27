@@ -7,7 +7,7 @@
     tools:context="com.scannella.blockdestroyer.lvl1">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imgBall"
         android:layout_width="29dp"
         android:layout_height="29dp"
         app:srcCompat="@drawable/ball"
@@ -19,6 +19,6 @@
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         app:srcCompat="@android:drawable/arrow_down_float"
-        tools:layout_editor_absoluteY="419dp"
-        tools:layout_editor_absoluteX="127dp" />
+        tools:layout_editor_absoluteX="127dp"
+        tools:layout_editor_absoluteY="419dp" />
 </FrameLayout>

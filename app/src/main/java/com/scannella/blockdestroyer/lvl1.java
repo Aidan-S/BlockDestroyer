@@ -3,6 +3,7 @@ package com.scannella.blockdestroyer;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -190,3 +191,14 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
 
 
 }
+
+/*private class PlayAreaView extends View {
+    private Matrix translate;
+    private Bitmap droid;
+    protected void onDraw(Canvas canvas) {
+        canvas.drawBitmap(droid, translate, null);
+        Matrix m = canvas.getMatrix();
+        *//*Log.d(DEBUG_TAG, "Matrix: "+translate.toShortString());
+        Log.d(DEBUG_TAG, "Canvas: "+m.toShortString());*//*
+    }
+}*/
