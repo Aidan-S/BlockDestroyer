@@ -31,9 +31,7 @@ public class GestureListener implements GestureDetector.OnGestureListener, Gestu
 
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        //Log.v(DEBUG_TAG, "onDoubleTap");
-        view.onResetLocation();
-        return true;
+        return false;
     }
 
     @Override
