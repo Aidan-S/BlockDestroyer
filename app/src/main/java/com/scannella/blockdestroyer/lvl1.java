@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,15 +31,18 @@ import android.widget.ImageView;
 
 public class lvl1 extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener  {
 
+    final Handler handler = new Handler();
 
     // The player's paddle
     float screenX = getResources().getDisplayMetrics().widthPixels;
     float screenY = getResources().getDisplayMetrics().heightPixels;
-
+    private Ball ball;
     private GestureDetectorCompat GestureDetector;
 
+    private boolean paused = true;
+    final Canvas canvas;
     private ImageView paddle;
-
+    private int direction = 270;
 
     /*SurfaceHolder ourHolder;
 
@@ -62,11 +66,20 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
         //prepares gestures
         this.GestureDetector = new GestureDetectorCompat(this, this);
         GestureDetector.setOnDoubleTapListener(this);
-
+        updateBall(canvas);
 
     }
 
-
+    public void updateBall(Canvas canvas){
+        while(!paused){
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void setBall(canvas) {
+                    ball.setDirection(direction);
+                }
+            }, 100);
+        }
+    }
 
 
 
