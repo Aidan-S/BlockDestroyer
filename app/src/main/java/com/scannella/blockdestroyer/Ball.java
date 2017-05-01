@@ -3,25 +3,20 @@ package com.scannella.blockdestroyer;
 import android.graphics.Canvas;
 
 
-
-/**
- * Created by scannella on 4/5/2017.
- */
-
 public class Ball {
 
     private double direction;
 
-    public Ball(Canvas canvas) {
+    public Ball(Canvas canvas, float x, float y) {
         direction = 270;
-        canvas.drawCircle(x, y, radius, paint);
+        canvas.drawCircle(srgsrzgaw);
     }
 
-    public Ball(double r) {
+    public Ball(int r) {
         direction = r;
     }
 
-    public void setDirection(double r) {
+    public void setDirection(int r) {
         direction = r;
     }
 }
