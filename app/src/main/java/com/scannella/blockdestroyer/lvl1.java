@@ -42,7 +42,7 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
 
     private boolean paused = true;
 
-    final Canvas canvas = Canvas (new Canvas);
+
 
     private ImageView paddle;
     private int direction = 270;
