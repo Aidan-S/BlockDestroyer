@@ -1,6 +1,7 @@
 package com.scannella.blockdestroyer;
 
 import android.content.Context;
+import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,8 +31,7 @@ public class PlayAreaView extends View {
     public PlayAreaView(Context context) {
         super(context);
         translate = new Matrix();
-        gestures = new GestureDetector(activity_lvl1,
-                new GestureListener(this));
+        gestures = new GestureDetector(lvl1.this, new Gesture());
 
         paddle = BitmapFactory.decodeResource(getResources(), R.drawable.paddle);
     }

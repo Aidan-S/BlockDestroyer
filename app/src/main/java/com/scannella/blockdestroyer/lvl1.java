@@ -1,6 +1,5 @@
 package com.scannella.blockdestroyer;
 
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
