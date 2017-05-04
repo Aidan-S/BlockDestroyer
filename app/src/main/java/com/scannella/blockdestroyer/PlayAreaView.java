@@ -12,9 +12,7 @@ import android.view.View;
 
 import static com.scannella.blockdestroyer.R.layout.activity_lvl1;
 
-/**
- * Created by scannella on 4/27/2017.
- */
+
 
 public class PlayAreaView extends View {
     private Matrix translate;
@@ -34,6 +32,7 @@ public class PlayAreaView extends View {
         translate = new Matrix();
         gestures = new GestureDetector(activity_lvl1,
                 new GestureListener(this));
+
         paddle = BitmapFactory.decodeResource(getResources(), R.drawable.paddle);
     }
 

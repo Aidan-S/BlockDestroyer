@@ -36,19 +36,20 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
     // The player's paddle
     float screenX = getResources().getDisplayMetrics().widthPixels;
     float screenY = getResources().getDisplayMetrics().heightPixels;
-    private Ball ball();
+
+    //private Ball ball();
     private GestureDetectorCompat GestureDetector;
 
     private boolean paused = true;
 
-    final Canvas canvas;
+    final Canvas canvas = Canvas (new Canvas);
 
     private ImageView paddle;
     private int direction = 270;
 
     /*SurfaceHolder ourHolder;
 
-    Canvas canvas;
+
     Paint paint;
     Paddle paddle = new Paddle(screenX, screenY);*/
 
@@ -56,6 +57,10 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lvl1);
+
+        //create canvas
+        Bitmap map = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(map);
 
         paddle = (ImageView) findViewById(R.id.imgPaddle);
 
@@ -68,11 +73,12 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
         //prepares gestures
         this.GestureDetector = new GestureDetectorCompat(this, this);
         GestureDetector.setOnDoubleTapListener(this);
-        updateBall(canvas);
+        //updateBall(canvas);
 
     }
 
-    public void updateBall(Canvas canvas){
+    //Code for ball that isn't working
+    /*public void updateBall(Canvas canvas){
         while(!paused){
             handler.postDelayed(new Runnable() {
                 @Override
@@ -81,7 +87,7 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
                 }
             }, 100);
         }
-    }
+    }*/
 
 
 
@@ -94,7 +100,6 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
     }
 
 
-    // Assign the touch listener to your view which you want to move
 
 
     // This defines your touch listener

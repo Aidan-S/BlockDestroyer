@@ -8,8 +8,8 @@ public class Ball {
     private double direction;
 
     public Ball(Canvas canvas, float x, float y) {
-        direction = 270;
-        canvas.drawCircle(srgsrzgaw);
+       /* direction = 270;
+        canvas.drawCircle();*/
     }
 
     public Ball(int r) {
