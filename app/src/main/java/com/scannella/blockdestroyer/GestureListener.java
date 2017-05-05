@@ -25,7 +25,7 @@ public class GestureListener implements GestureDetector.OnGestureListener, Gestu
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         //Log.v(DEBUG_TAG, "onScroll");
 
-        view.onMove(-distanceX, -distanceY);
+        view.onMove(-distanceX, 0);
         return true;
     }
 
@@ -60,8 +60,7 @@ public class GestureListener implements GestureDetector.OnGestureListener, Gestu
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        GestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
+        return gestures.onTouchEvent(event);
     }
 
 }

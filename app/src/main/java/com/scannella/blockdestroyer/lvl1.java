@@ -57,11 +57,13 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lvl1);
 
+        paddle = (ImageView) findViewById(R.id.imgPaddle);
+
         //create canvas
         Bitmap map = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(map);
 
-        paddle = (ImageView) findViewById(R.id.imgPaddle);
+
 
         FrameLayout frame = (FrameLayout) findViewById(R.id.graphics_holder);
         PlayAreaView image = new PlayAreaView(this);

@@ -11,7 +11,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import static com.scannella.blockdestroyer.R.layout.activity_lvl1;
 
 
 
@@ -23,15 +22,13 @@ public class PlayAreaView extends View {
     protected void onDraw(Canvas canvas) {
         canvas.drawBitmap(paddle, translate, null);
         Matrix m = canvas.getMatrix();
-        /*Log.d(DEBUG_TAG, "Matrix: "+translate.toShortString());
-        Log.d(DEBUG_TAG, "Canvas: "+m.toShortString());*/
     }
 
 
     public PlayAreaView(Context context) {
         super(context);
         translate = new Matrix();
-        gestures = new GestureDetector(lvl1.this, new Gesture());
+        gestures = new GestureDetector(this, new GestureListener(this));
 
         paddle = BitmapFactory.decodeResource(getResources(), R.drawable.paddle);
     }
