@@ -41,7 +41,7 @@ public class lvl1 extends AppCompatActivity implements GestureDetector.OnGesture
 
     private boolean paused = true;
 
-
+    private GestureDetector gestures;
 
     private ImageView paddle;
     private int direction = 270;
