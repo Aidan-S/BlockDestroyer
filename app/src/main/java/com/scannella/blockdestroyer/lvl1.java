@@ -28,198 +28,288 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 
-public class lvl1 extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener  {
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.Display;
+import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
-    final Handler handler = new Handler();
-
-    // The player's paddle
-    float screenX = getResources().getDisplayMetrics().widthPixels;
-    float screenY = getResources().getDisplayMetrics().heightPixels;
-
-    //private Ball ball();
-    private GestureDetectorCompat GestureDetector;
-
-    private boolean paused = true;
-
-    private GestureDetector gestures;
-
-    private ImageView paddle;
-    private int direction = 270;
-
-    /*SurfaceHolder ourHolder;
+import java.util.Random;
 
 
-    Paint paint;
-    Paddle paddle = new Paddle(screenX, screenY);*/
+public class lvl1 extends AppCompatActivity {
+
+    Canvas canvas;
+    SquashCourtView squashCourtView;
+
+
+    Display display;
+    Point size;
+    int screenWidth;
+    int screenHeight;
+
+    int racketWidth;
+    int racketHeight;
+    Point racketPosition;
+
+    Point ballPosition;
+    int ballWidth;
+
+    boolean ballIsMovingLeft;
+    boolean ballIsMovingRight;
+    boolean ballIsMovingDown;
+    boolean ballIsMovingUp;
+
+    boolean racketIsMovingRight;
+    boolean racketIsMovingLeft;
+
+    //long lastFrameTime;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lvl1);
 
-        paddle = (ImageView) findViewById(R.id.imgPaddle);
-
-        //create canvas
-        Bitmap map = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(map);
+        squashCourtView = new SquashCourtView(this);
+        setContentView(squashCourtView);
 
 
+        /// Get the screen size in Pixels
+        display = getWindowManager().getDefaultDisplay();
+        size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
 
-        FrameLayout frame = (FrameLayout) findViewById(R.id.graphics_holder);
-        PlayAreaView image = new PlayAreaView(this);
-        frame.addView(paddle);
+        // The game objects
+        racketPosition = new Point();
+        racketPosition.x = screenWidth / 2;
+        racketPosition.y = screenHeight - 520;
+        racketWidth = screenWidth / 8;
+        racketHeight = 10;
 
+        ballWidth = screenWidth / 35;
+        ballPosition = new Point();
+        ballPosition.x = screenWidth / 2;
+        ballPosition.y = 1 + ballWidth;
 
-
-        //prepares gestures
-        this.GestureDetector = new GestureDetectorCompat(this, this);
-        GestureDetector.setOnDoubleTapListener(this);
-        //updateBall(canvas);
 
     }
 
-    //Code for ball that isn't working
-    /*public void updateBall(Canvas canvas){
-        while(!paused){
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void setBall(canvas, scre) {
-                    ball.setDirection(direction);
+    class SquashCourtView extends SurfaceView implements Runnable {
+        Thread ourThread = null;
+        SurfaceHolder ourHolder;
+        volatile boolean playingSquash;
+        Paint paint;
+
+        public SquashCourtView(Context context) {
+            super(context);
+            ourHolder = getHolder();
+            paint = new Paint();
+            ballIsMovingDown = true;
+
+            //Send the ball in random direction
+            Random randomNumber = new Random();
+            int ballDirection = randomNumber.nextInt(3);
+            switch (ballDirection) {
+                case 0:
+                    ballIsMovingLeft = true;
+                    ballIsMovingRight = false;
+                    break;
+                case 1:
+                    ballIsMovingRight = true;
+                    ballIsMovingLeft = false;
+                    break;
+                case 2:
+                    ballIsMovingLeft = false;
+                    ballIsMovingRight = false;
+                    break;
+            }
+        }
+
+        @Override
+        public void run() {
+            while (playingSquash) {
+                updateCourt();
+                drawCourt();
+                //      controlFPS();
+            }
+        }
+
+        public void updateCourt() {
+            if (racketIsMovingRight && racketPosition.x + racketWidth - 26 < screenWidth) {
+                racketPosition.x = racketPosition.x + 25;
+            }
+            if (racketIsMovingLeft && racketPosition.x > 1) {
+                racketPosition.x = racketPosition.x - 25;
+            }
+
+            // dtect collisions - ball hit right of screen
+            if (ballPosition.x + ballWidth > screenWidth) {
+                ballIsMovingLeft = true;
+                ballIsMovingRight = false;
+
+            }
+            // ball hit left of screen
+            if (ballPosition.x < 0) {
+                ballIsMovingLeft = false;
+                ballIsMovingRight = true;
+
+            }
+
+            //Edge of ball has hit bottom of screen
+            if (ballPosition.y > screenHeight - ballWidth) {
+
+
+                ballPosition.y = screenHeight-60; // back to top of screen
+
+                // choose horizontal direction for next ball
+                Random randomNumber = new Random();
+
+                int startX = randomNumber.nextInt(screenWidth - ballWidth) + 1;
+                ballPosition.x = startX + ballWidth;
+
+                int ballDirection = randomNumber.nextInt(3);
+                switch (ballDirection) {
+                    case 0:
+                        ballIsMovingLeft = true;
+                        ballIsMovingRight = false;
+                        break;
+                    case 1:
+                        ballIsMovingRight = true;
+                        ballIsMovingLeft = false;
+                        break;
+                    case 2:
+                        ballIsMovingLeft = false;
+                        ballIsMovingRight = false;
+                        break;
                 }
-            }, 100);
+
+            }
+
+            // hit the top of the screen
+            if (ballPosition.y <= 0) {
+                ballIsMovingDown = true;
+                ballIsMovingUp = false;
+                ballPosition.y = 1;
+
+            }
+            // depending upon the two direcitons we should be mving in adjust our x any positions
+            if (ballIsMovingDown) ballPosition.y += 18;
+            if (ballIsMovingUp) ballPosition.y -= 30;
+            if (ballIsMovingLeft) ballPosition.x -= 36;
+            if (ballIsMovingRight) ballPosition.x += 36;
+
+            // Has ball hit racket
+            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
+                int halfRacket = racketWidth / 2;
+                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
+
+                    ballIsMovingUp = true;
+                    ballIsMovingDown = false;
+
+                    // now decide how to rebound the ball horizontally
+                    if (ballPosition.x < racketPosition.x) {
+                        ballIsMovingRight = true;
+                        ballIsMovingLeft = false;
+                    } else {
+                        ballIsMovingRight = false;
+                        ballIsMovingLeft = true;
+                    }
+                }
+            }
         }
-    }*/
+
+        public void drawCourt() {
+            if (ourHolder.getSurface().isValid()) {
+                canvas = ourHolder.lockCanvas();
+
+                //Paint paint = new Paint();
+                canvas.drawColor(Color.argb(255, 51, 255, 153));//the background
+                paint.setColor(Color.BLACK);
 
 
-
-    @Override
-    //create pull down options menu
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_items, menu);
-        return true;
-    }
-
-
-
-
-    // This defines your touch listener
-
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-
-                return true;
-            } else {
-                return false;
+                // Draw the squash racket
+                Log.i("Racket: ",racketPosition.x + ", " + racketPosition.y);
+                canvas.drawRect(
+                        racketPosition.x - (racketWidth / 2),
+                        racketPosition.y - (racketHeight / 2),
+                        racketPosition.x + (racketWidth / 2),
+                        racketPosition.y + racketHeight, paint);
+                // Draw the ball
+                canvas.drawRect(ballPosition.x, ballPosition.y, ballPosition.x + ballWidth, ballPosition.y + ballWidth, paint);
+                ourHolder.unlockCanvasAndPost(canvas);
             }
         }
 
 
 
+        public void pause() {
+            playingSquash = false;
+            try {
+                ourThread.join();
+            } catch (InterruptedException e) {
 
-
-
-    @Override
-    //when item is selected
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.itmBack) {
-            Intent intent = new Intent(lvl1.this,MainActivity.class);
-            startActivity(intent);
-        }
-
-        if (id == R.id.itmReset) {
-            Intent intent = new Intent(lvl1.this,MainActivity.class);
-            startActivity(intent);
-        }
-
-        if (id == R.id.itmPause) {
-            Intent intent = new Intent(lvl1.this,MainActivity.class);
-            startActivity(intent);
-        }
-
-
-        return super.onOptionsItemSelected(item);
-
-    }
-
-    //gesture methods for when the player misses and taps the screen
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) { return false; }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {return false;}
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent e) {
-        return false;
-    }
-
-    @Override
-    public boolean onDown(MotionEvent e) {
-        /*float x = e.getX();
-        float y = e.getY();
-        if(x < screenX){
-            switch (e.getAction()) {
-                case e.ACTION_DOWN:
-                    // Write your code to perform an action on down
-                    break;
-                case e.ACTION_MOVE:
-
-                     break;
-                case e.ACTION_UP:
-                    // Write your code to perform an action on touch up
-                    break;
             }
         }
-        return true;*/
-        return false;
+
+        public void resume() {
+            playingSquash = true;
+            ourThread = new Thread(this);
+            ourThread.start();
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent motionEvent) {
+            switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+                case MotionEvent.ACTION_DOWN:
+                    if (motionEvent.getX() >= screenWidth / 2) {
+                        racketIsMovingRight = true;
+                        racketIsMovingLeft = false;
+                    } else {
+                        racketIsMovingLeft = true;
+                        racketIsMovingRight = false;
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    racketIsMovingRight = false;
+                    racketIsMovingLeft = false;
+                    break;
+            }
+            return true;
+        }
+
+
     }
 
     @Override
-    public void onShowPress(MotionEvent e) {}
+    protected void onStop() {
+        super.onStop();
+        while (true) {
+            squashCourtView.pause();
+            break;
+        }
+        finish();
 
+    }
     @Override
-    public boolean onSingleTapUp(MotionEvent e) {
-        return false;
+    protected void onPause() {
+        super.onPause();
+        squashCourtView.pause();
     }
 
     @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
-        return true;
+    protected void onResume() {
+        super.onResume();
+        squashCourtView.resume();
     }
-
-    @Override
-    public void onLongPress(MotionEvent e) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        return false;
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        GestureDetector.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-
 
 
 }
-
-/*private class PlayAreaView extends View {
-    private Matrix translate;
-    private Bitmap droid;
-    protected void onDraw(Canvas canvas) {
-        canvas.drawBitmap(droid, translate, null);
-        Matrix m = canvas.getMatrix();
-        *//*Log.d(DEBUG_TAG, "Matrix: "+translate.toShortString());
-        Log.d(DEBUG_TAG, "Canvas: "+m.toShortString());*//*
-    }
-}*/
