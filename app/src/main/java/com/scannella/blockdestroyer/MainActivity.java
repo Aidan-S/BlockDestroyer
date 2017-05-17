@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        Button button1 = (Button) findViewById(R.id.btnLvl1);
+        ImageButton button1 = (ImageButton) findViewById(R.id.btnLvl1);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -27,20 +28,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button button2 = (Button) findViewById(R.id.btnLvl2);
+        ImageButton button2 = (ImageButton) findViewById(R.id.btnLvl2);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(MainActivity.this, lvl1.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(MainActivity.this, lvl2.class);
+                startActivity(intent);
             }
         });
-        Button button3 = (Button) findViewById(R.id.btnLvl3);
+        ImageButton button3 = (ImageButton) findViewById(R.id.btnLvl3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(MainActivity.this, lvl1.class);
-                startActivity(intent);*/
+                Intent intent = new Intent(MainActivity.this, lvl3.class);
+                startActivity(intent);
             }
         });
     }
