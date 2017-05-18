@@ -168,7 +168,7 @@ public class lvl1 extends AppCompatActivity {
             if (ballPosition.y > screenHeight - ballWidth) {
 
 
-                ballPosition.y = screenHeight-60; // back to top of screen
+
 
                 // choose horizontal direction for next ball
                 Random randomNumber = new Random();
@@ -191,7 +191,7 @@ public class lvl1 extends AppCompatActivity {
                         ballIsMovingRight = false;
                         break;
                 }
-
+                    ballPosition.y = screenHeight-60; // back to top of screen
             }
 
             // hit the top of the screen
