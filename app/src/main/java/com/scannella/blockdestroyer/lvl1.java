@@ -164,6 +164,26 @@ public class lvl1 extends AppCompatActivity {
 
             }
 
+            // Has ball hit racket
+            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
+                int halfRacket = racketWidth / 2;
+                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
+
+                    ballIsMovingUp = true;
+                    ballIsMovingDown = false;
+
+                    // now decide how to rebound the ball horizontally
+                    if (ballPosition.x < racketPosition.x) {
+                        ballIsMovingRight = true;
+                        ballIsMovingLeft = false;
+                    } else {
+                        ballIsMovingRight = false;
+                        ballIsMovingLeft = true;
+                    }
+                }
+            }
+
+
             //Edge of ball has hit bottom of screen
             if (ballPosition.y > screenHeight - ballWidth) {
 
@@ -174,7 +194,7 @@ public class lvl1 extends AppCompatActivity {
                 Random randomNumber = new Random();
 
                 int startX = randomNumber.nextInt(screenWidth - ballWidth) + 1;
-                ballPosition.x = startX + ballWidth;
+                ballPosition.x = racketPosition.x + ballWidth;
 
                 int ballDirection = randomNumber.nextInt(3);
                 switch (ballDirection) {
@@ -207,24 +227,7 @@ public class lvl1 extends AppCompatActivity {
             if (ballIsMovingLeft) ballPosition.x -= 36;
             if (ballIsMovingRight) ballPosition.x += 36;
 
-            // Has ball hit racket
-            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
-                int halfRacket = racketWidth / 2;
-                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
 
-                    ballIsMovingUp = true;
-                    ballIsMovingDown = false;
-
-                    // now decide how to rebound the ball horizontally
-                    if (ballPosition.x < racketPosition.x) {
-                        ballIsMovingRight = true;
-                        ballIsMovingLeft = false;
-                    } else {
-                        ballIsMovingRight = false;
-                        ballIsMovingLeft = true;
-                    }
-                }
-            }
         }
 
         public void drawCourt() {
