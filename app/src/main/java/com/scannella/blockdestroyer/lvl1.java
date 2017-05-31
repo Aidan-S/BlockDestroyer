@@ -27,6 +27,12 @@ public class lvl1 extends AppCompatActivity {
     Canvas canvas;
     SquashCourtView squashCourtView;
 
+    block[] bricks = new block[18];
+    int numBricks;
+
+    int brickWidth;
+    int brickHeight;
+
     private SoundPool soundPool;
 
     int sample1 = -1;
@@ -146,12 +152,28 @@ public class lvl1 extends AppCompatActivity {
         }
 
         public void updateCourt() {
+
+            //create bricks
+            brickWidth = screenWidth / 6 ;
+            brickHeight = screenHeight / 13;
+            numBricks = 0;
+
+            for(int c = 0; c < 6; c++ ){
+                for(int r = 0; r < 3; r++ ){
+                    bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
+                    numBricks ++;
+                }
+            }
+
+
             if (racketIsMovingRight) {
                 racketPosition.x = racketPosition.x + 10;
             }
             if (racketIsMovingLeft) {
                 racketPosition.x = racketPosition.x - 10;
             }
+
+
 
             // dtect collisions - ball hit right of screen
             if (ballPosition.x + ballWidth > screenWidth) {
@@ -236,6 +258,13 @@ public class lvl1 extends AppCompatActivity {
         public void drawCourt() {
             if (ourHolder.getSurface().isValid()) {
                 canvas = ourHolder.lockCanvas();
+
+                //draw blocks
+                for(int i = 0; i < numBricks; i++){
+                    if(bricks[i].getAlive()) {
+                        canvas.drawRect(bricks[i].getRect(), paint);
+                    }
+                }
 
                 //Paint paint = new Paint();
                 canvas.drawColor(Color.argb(255, 51, 255, 153));//the background
