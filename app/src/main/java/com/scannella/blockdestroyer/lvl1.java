@@ -88,12 +88,18 @@ public class lvl1 extends AppCompatActivity {
         size = new Point();
         display.getSize(size);
         screenWidth = size.x;
-        screenHeight = size.y;
+        final int BORDERMENU = 200;
+        screenHeight = size.y - BORDERMENU;
+        Log.i("Screen",screenWidth + ", " + screenHeight);
 
+        float screenX = getResources().getDisplayMetrics().widthPixels;
+        float screenY = getResources().getDisplayMetrics().heightPixels;
+
+        Log.i("Screen",screenX+", " + screenY);
         // The game objects
         racketPosition = new Point();
         racketPosition.x = screenWidth / 2;
-        racketPosition.y = screenHeight - 20;
+        racketPosition.y = screenHeight - 320;
         racketWidth = screenWidth / 8;
         racketHeight = 10;
 
@@ -146,14 +152,15 @@ public class lvl1 extends AppCompatActivity {
         }
 
         public void updateCourt() {
-            if (racketIsMovingRight) {
+
+           if (racketIsMovingRight) {
                 racketPosition.x = racketPosition.x + 10;
             }
             if (racketIsMovingLeft) {
                 racketPosition.x = racketPosition.x - 10;
             }
 
-            // dtect collisions - ball hit right of screen
+            // detect collisions - ball hit right of screen
             if (ballPosition.x + ballWidth > screenWidth) {
                 ballIsMovingLeft = true;
                 ballIsMovingRight = false;
@@ -165,22 +172,35 @@ public class lvl1 extends AppCompatActivity {
                 ballIsMovingRight = true;
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
+            // hit the top of the screen
+            if (ballPosition.y <= 0) {
+                ballIsMovingDown = true;
+                ballIsMovingUp = false;
+                ballPosition.y = 1;
+                soundPool.play(sample2, 1, 1, 0, 0, 1);
+            }
 
             //Edge of ball has hit bottom of screen
-            if (ballPosition.y > screenHeight - ballWidth) {
+            // Using ballWidth, because it is the same as the height
+            if (ballPosition.y > screenHeight - ballWidth) {  // hit bottom of screen
+                //   if (ballPosition.y > 1410) {
+                Log.i("Ball", "Hit Bottom: screenHeight - ballWidth: " + (screenHeight - ballWidth) + ", " + ballPosition.y);
                 lives = lives - 1;
                 if (lives == 0) {
                     lives = 3;
                     score = 0;
                     soundPool.play(sample4, 1, 1, 0, 0, 1);
                 }
+                ballIsMovingDown = true;
+                ballIsMovingUp = false;
                 ballPosition.y = 1 + ballWidth;
                 // back to top of screen
-                // choose horizontal direction for next ball
+                // choose horizontal location for next ball
                 Random randomNumber = new Random();
                 int startX = randomNumber.nextInt(screenWidth - ballWidth) + 1;
                 ballPosition.x = startX + ballWidth;
 
+                // choose horizontal direction for the next ball
                 int ballDirection = randomNumber.nextInt(3);
                 switch (ballDirection) {
                     case 0:
@@ -195,42 +215,48 @@ public class lvl1 extends AppCompatActivity {
                         ballIsMovingLeft = false;
                         ballIsMovingRight = false;
                         break;
-                }
+                } // switch
+            }
+                else{ // Ball is not at bottom of screen - is it hitting the racket?
+           //     if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
+                    if ((ballPosition.y + ballWidth >= racketPosition.y ) && // ball is at racket height
+                            (ballPosition.y < racketPosition.y + racketHeight) &&  // ball is not below racketHeight
+                            (ballPosition.x > racketPosition.x && // ball is farther than the start of the paddle and
+                                    ballPosition.x < racketPosition.x + racketWidth)) { // not as far as the end of the paddle
+
+
+                        int halfRacket = racketWidth / 2;
+                     //   if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) &&
+                     //           ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
+                            Log.i("Ball","Bounce off Racket");
+                            // rebound the ball vertically and play a sound
+                            soundPool.play(sample3, 1, 1, 0, 0, 1);
+                            score++;
+
+                            ballIsMovingUp = true;
+                            ballIsMovingDown = false;
+                            // now decide how to rebound the ball horizontally
+                            if (ballPosition.x < racketPosition.x) {
+                                ballIsMovingRight = true;
+                                ballIsMovingLeft = false;
+                            } else {
+                                ballIsMovingRight = false;
+                                ballIsMovingLeft = true;
+                            }
+                        } // ball is not at bottom or at racket - could be above or below
+                        else {
+                        if (ballPosition.y > racketPosition.y + racketHeight)
+                            Log.i("Ball","Missed Racket, Ball Y: " + ballPosition.y + " Gonna Die: " + (screenHeight - ballWidth));
+                        }
 
             }
 
-            // hit the top of the screen
-            if (ballPosition.y <= 0) {
-                ballIsMovingDown = true;
-                ballIsMovingUp = false;
-                ballPosition.y = 1;
-                soundPool.play(sample2, 1, 1, 0, 0, 1);
-            }
-            // depending upon the two direcitons we should be mving in adjust our x any positions
+            // depending upon the two directions we should be moving in adjust our x any positions
             if (ballIsMovingDown) ballPosition.y += 6;
             if (ballIsMovingUp) ballPosition.y -= 10;
             if (ballIsMovingLeft) ballPosition.x -= 12;
             if (ballIsMovingRight) ballPosition.x += 12;
 
-            // Has ball hit racket
-            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
-                int halfRacket = racketWidth / 2;
-                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
-                    // rebound the vall vertically and play a sound
-                    soundPool.play(sample3, 1, 1, 0, 0, 1);
-                    score++;
-                    ballIsMovingUp = true;
-                    ballIsMovingDown = false;
-                    // now decide how to rebound the ball horizontally
-                    if (ballPosition.x < racketPosition.x) {
-                        ballIsMovingRight = true;
-                        ballIsMovingLeft = false;
-                    } else {
-                        ballIsMovingRight = false;
-                        ballIsMovingLeft = true;
-                    }
-                }
-            }
         }
 
         public void drawCourt() {
@@ -243,7 +269,6 @@ public class lvl1 extends AppCompatActivity {
 
 
                 // Draw the squash racket
-                Log.i("Racket: ",racketPosition.x + ", " + racketPosition.y);
                 canvas.drawRect(
                         racketPosition.x - (racketWidth / 2),
                         racketPosition.y - (racketHeight / 2),
