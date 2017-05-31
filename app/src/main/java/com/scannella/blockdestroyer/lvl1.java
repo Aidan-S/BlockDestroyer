@@ -1,54 +1,38 @@
 package com.scannella.blockdestroyer;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
-import android.graphics.Point;
-import android.os.Handler;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Display;
-import android.view.GestureDetector;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.os.Bundle;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.IOException;
 import java.util.Random;
 
 
 public class lvl1 extends AppCompatActivity {
-
     Canvas canvas;
     SquashCourtView squashCourtView;
 
+    private SoundPool soundPool;
+
+    int sample1 = -1;
+    int sample2 = -1;
+    int sample3 = -1;
+    int sample4 = -1;
 
     Display display;
     Point size;
@@ -70,8 +54,10 @@ public class lvl1 extends AppCompatActivity {
     boolean racketIsMovingRight;
     boolean racketIsMovingLeft;
 
-    //long lastFrameTime;
-
+    long lastFrameTime;
+    int fps;
+    int score;
+    int lives;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +65,24 @@ public class lvl1 extends AppCompatActivity {
 
         squashCourtView = new SquashCourtView(this);
         setContentView(squashCourtView);
-
-
+        // Sound Code
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+        try {
+            // Create objects of the two required classes
+            AssetManager assetManager = getAssets();
+            AssetFileDescriptor descriptor;
+            // create our three fx in memory ready for use
+            descriptor = assetManager.openFd("sample1.ogg");
+            sample1 = soundPool.load(descriptor, 0);
+            descriptor = assetManager.openFd("sample2.ogg");
+            sample2 = soundPool.load(descriptor, 0);
+            descriptor = assetManager.openFd("sample3.ogg");
+            sample3 = soundPool.load(descriptor, 0);
+            descriptor = assetManager.openFd("sample4.ogg");
+            sample4 = soundPool.load(descriptor, 0);
+        } catch (IOException e) {
+            // catch exceptions here
+        }
         /// Get the screen size in Pixels
         display = getWindowManager().getDefaultDisplay();
         size = new Point();
@@ -91,7 +93,7 @@ public class lvl1 extends AppCompatActivity {
         // The game objects
         racketPosition = new Point();
         racketPosition.x = screenWidth / 2;
-        racketPosition.y = screenHeight - 520;
+        racketPosition.y = screenHeight - 20;
         racketWidth = screenWidth / 8;
         racketHeight = 10;
 
@@ -100,7 +102,7 @@ public class lvl1 extends AppCompatActivity {
         ballPosition.x = screenWidth / 2;
         ballPosition.y = 1 + ballWidth;
 
-
+        lives = 3;
     }
 
     class SquashCourtView extends SurfaceView implements Runnable {
@@ -139,62 +141,45 @@ public class lvl1 extends AppCompatActivity {
             while (playingSquash) {
                 updateCourt();
                 drawCourt();
-                //      controlFPS();
+                controlFPS();
             }
         }
 
         public void updateCourt() {
-            if (racketIsMovingRight && racketPosition.x + racketWidth - 26 < screenWidth) {
-                racketPosition.x = racketPosition.x + 25;
+            if (racketIsMovingRight) {
+                racketPosition.x = racketPosition.x + 10;
             }
-            if (racketIsMovingLeft && racketPosition.x > 1) {
-                racketPosition.x = racketPosition.x - 25;
+            if (racketIsMovingLeft) {
+                racketPosition.x = racketPosition.x - 10;
             }
 
             // dtect collisions - ball hit right of screen
             if (ballPosition.x + ballWidth > screenWidth) {
                 ballIsMovingLeft = true;
                 ballIsMovingRight = false;
-
+                soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
             // ball hit left of screen
             if (ballPosition.x < 0) {
                 ballIsMovingLeft = false;
                 ballIsMovingRight = true;
-
+                soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
-
-            // Has ball hit racket
-            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
-                int halfRacket = racketWidth / 2;
-                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
-
-                    ballIsMovingUp = true;
-                    ballIsMovingDown = false;
-
-                    // now decide how to rebound the ball horizontally
-                    if (ballPosition.x < racketPosition.x) {
-                        ballIsMovingRight = true;
-                        ballIsMovingLeft = false;
-                    } else {
-                        ballIsMovingRight = false;
-                        ballIsMovingLeft = true;
-                    }
-                }
-            }
-
 
             //Edge of ball has hit bottom of screen
             if (ballPosition.y > screenHeight - ballWidth) {
-
-
-
-
+                lives = lives - 1;
+                if (lives == 0) {
+                    lives = 3;
+                    score = 0;
+                    soundPool.play(sample4, 1, 1, 0, 0, 1);
+                }
+                ballPosition.y = 1 + ballWidth;
+                // back to top of screen
                 // choose horizontal direction for next ball
                 Random randomNumber = new Random();
-
                 int startX = randomNumber.nextInt(screenWidth - ballWidth) + 1;
-                ballPosition.x = racketPosition.x + ballWidth;
+                ballPosition.x = startX + ballWidth;
 
                 int ballDirection = randomNumber.nextInt(3);
                 switch (ballDirection) {
@@ -211,7 +196,7 @@ public class lvl1 extends AppCompatActivity {
                         ballIsMovingRight = false;
                         break;
                 }
-                    ballPosition.y = screenHeight-60; // back to top of screen
+
             }
 
             // hit the top of the screen
@@ -219,15 +204,33 @@ public class lvl1 extends AppCompatActivity {
                 ballIsMovingDown = true;
                 ballIsMovingUp = false;
                 ballPosition.y = 1;
-
+                soundPool.play(sample2, 1, 1, 0, 0, 1);
             }
             // depending upon the two direcitons we should be mving in adjust our x any positions
-            if (ballIsMovingDown) ballPosition.y += 18;
-            if (ballIsMovingUp) ballPosition.y -= 30;
-            if (ballIsMovingLeft) ballPosition.x -= 36;
-            if (ballIsMovingRight) ballPosition.x += 36;
+            if (ballIsMovingDown) ballPosition.y += 6;
+            if (ballIsMovingUp) ballPosition.y -= 10;
+            if (ballIsMovingLeft) ballPosition.x -= 12;
+            if (ballIsMovingRight) ballPosition.x += 12;
 
-
+            // Has ball hit racket
+            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
+                int halfRacket = racketWidth / 2;
+                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
+                    // rebound the vall vertically and play a sound
+                    soundPool.play(sample3, 1, 1, 0, 0, 1);
+                    score++;
+                    ballIsMovingUp = true;
+                    ballIsMovingDown = false;
+                    // now decide how to rebound the ball horizontally
+                    if (ballPosition.x < racketPosition.x) {
+                        ballIsMovingRight = true;
+                        ballIsMovingLeft = false;
+                    } else {
+                        ballIsMovingRight = false;
+                        ballIsMovingLeft = true;
+                    }
+                }
+            }
         }
 
         public void drawCourt() {
@@ -246,12 +249,29 @@ public class lvl1 extends AppCompatActivity {
                         racketPosition.y - (racketHeight / 2),
                         racketPosition.x + (racketWidth / 2),
                         racketPosition.y + racketHeight, paint);
+
                 // Draw the ball
                 canvas.drawRect(ballPosition.x, ballPosition.y, ballPosition.x + ballWidth, ballPosition.y + ballWidth, paint);
                 ourHolder.unlockCanvasAndPost(canvas);
             }
         }
+        public void controlFPS() {
+            long timeThisFrame = (System.currentTimeMillis() - lastFrameTime);
+            long timeToSleep = 15 - timeThisFrame;
+            if (timeThisFrame > 0) {
+                fps = (int) (1000 / timeThisFrame);
+            }
 
+            if (timeToSleep > 0){
+                try {
+                    ourThread.sleep(timeToSleep);
+                } catch (InterruptedException e) {
+
+                }
+            }
+
+            lastFrameTime = System.currentTimeMillis();
+        }
 
 
         public void pause() {
@@ -295,6 +315,7 @@ public class lvl1 extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+
         while (true) {
             squashCourtView.pause();
             break;
@@ -314,5 +335,12 @@ public class lvl1 extends AppCompatActivity {
         squashCourtView.resume();
     }
 
-
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            squashCourtView.pause();
+            finish();
+            return true;
+        }
+        return false;
+    }
 }
