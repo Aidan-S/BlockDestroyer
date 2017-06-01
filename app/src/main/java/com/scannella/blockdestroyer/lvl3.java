@@ -144,10 +144,10 @@ public class lvl3 extends AppCompatActivity {
         }
 
         public void updateCourt() {
-            if (racketIsMovingRight && racketPosition.x + racketWidth - 26 < screenWidth) {
+            if (racketIsMovingRight && racketPosition.x + (racketWidth/2)< screenWidth) {
                 racketPosition.x = racketPosition.x + 25;
             }
-            if (racketIsMovingLeft && racketPosition.x > 1) {
+            if (racketIsMovingLeft && racketPosition.x - (racketWidth/2) > 0) {
                 racketPosition.x = racketPosition.x - 25;
             }
 
@@ -164,35 +164,7 @@ public class lvl3 extends AppCompatActivity {
 
             }
 
-            //Edge of ball has hit bottom of screen
-            if (ballPosition.y > screenHeight - ballWidth) {
 
-
-                ballPosition.y = screenHeight-60; // back to top of screen
-
-                // choose horizontal direction for next ball
-                Random randomNumber = new Random();
-
-                int startX = randomNumber.nextInt(screenWidth - ballWidth) + 1;
-                ballPosition.x = startX + ballWidth;
-
-                int ballDirection = randomNumber.nextInt(3);
-                switch (ballDirection) {
-                    case 0:
-                        ballIsMovingLeft = true;
-                        ballIsMovingRight = false;
-                        break;
-                    case 1:
-                        ballIsMovingRight = true;
-                        ballIsMovingLeft = false;
-                        break;
-                    case 2:
-                        ballIsMovingLeft = false;
-                        ballIsMovingRight = false;
-                        break;
-                }
-
-            }
 
             // hit the top of the screen
             if (ballPosition.y <= 0) {
@@ -201,11 +173,19 @@ public class lvl3 extends AppCompatActivity {
                 ballPosition.y = 1;
 
             }
-            // depending upon the two direcitons we should be mving in adjust our x any positions
-            if (ballIsMovingDown) ballPosition.y += 18;
-            if (ballIsMovingUp) ballPosition.y -= 30;
-            if (ballIsMovingLeft) ballPosition.x -= 36;
-            if (ballIsMovingRight) ballPosition.x += 36;
+
+            if(ballPosition.y>racketPosition.y+20){
+
+                //lives = lives - 1;
+                //if (lives < 1) {
+                //    lives = 3;
+                //    score = 0;
+                //    soundPool.play(sample4, 1, 1, 0, 0, 1);
+                //}
+                ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
+                ballPosition.x = racketPosition.x;
+
+            }
 
             // Has ball hit racket
             if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
@@ -225,6 +205,15 @@ public class lvl3 extends AppCompatActivity {
                     }
                 }
             }
+
+
+            // depending upon the two direcitons we should be mving in adjust our x any positions
+            if (ballIsMovingDown) ballPosition.y += 18;
+            if (ballIsMovingUp) ballPosition.y -= 30;
+            if (ballIsMovingLeft) ballPosition.x -= 36;
+            if (ballIsMovingRight) ballPosition.x += 36;
+
+
         }
 
         public void drawCourt() {

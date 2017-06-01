@@ -12,7 +12,7 @@ public class block {
 
         alive = true;
 
-        rect = new RectF(column * width + 1, row * height + 1, column * width + width - 1, row * height + height - 1);
+        rect = new RectF((column * width) + 1, (row * height) + 1, (column * width) + width - 1, (row * height) + height - 1);
 
     }
 

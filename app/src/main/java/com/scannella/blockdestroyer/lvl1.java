@@ -2,6 +2,7 @@ package com.scannella.blockdestroyer;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
@@ -15,6 +16,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -99,7 +103,7 @@ public class lvl1 extends AppCompatActivity {
         // The game objects
         racketPosition = new Point();
         racketPosition.x = screenWidth / 2;
-        racketPosition.y = screenHeight - 20;
+        racketPosition.y = screenHeight - 520;
         racketWidth = screenWidth / 8;
         racketHeight = 10;
 
@@ -152,97 +156,70 @@ public class lvl1 extends AppCompatActivity {
         }
 
         public void updateCourt() {
+            /*//create bricks
+                    brickWidth = screenWidth / 6 ;
+                    brickHeight = screenHeight / 13;
+                    numBricks = 0;
 
-            //create bricks
-            brickWidth = screenWidth / 6 ;
-            brickHeight = screenHeight / 13;
-            numBricks = 0;
+                    for(int c = 0; c < 6; c++ ){
+                        for(int r = 0; r < 3; r++ ){
+                            bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
+                            numBricks ++;
+                        }
+                    }*/
 
-            for(int c = 0; c < 6; c++ ){
-                for(int r = 0; r < 3; r++ ){
-                    bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
-                    numBricks ++;
-                }
+
+            if (racketIsMovingRight && racketPosition.x + (racketWidth/2)< screenWidth) {
+                racketPosition.x = racketPosition.x + 25;
             }
-
-
-            if (racketIsMovingRight) {
-                racketPosition.x = racketPosition.x + 10;
+            if (racketIsMovingLeft && racketPosition.x - (racketWidth/2) > 0) {
+                racketPosition.x = racketPosition.x - 25;
             }
-            if (racketIsMovingLeft) {
-                racketPosition.x = racketPosition.x - 10;
-            }
-
-
 
             // dtect collisions - ball hit right of screen
             if (ballPosition.x + ballWidth > screenWidth) {
                 ballIsMovingLeft = true;
                 ballIsMovingRight = false;
-                soundPool.play(sample1, 1, 1, 0, 0, 1);
+
             }
             // ball hit left of screen
             if (ballPosition.x < 0) {
                 ballIsMovingLeft = false;
                 ballIsMovingRight = true;
-                soundPool.play(sample1, 1, 1, 0, 0, 1);
-            }
-
-            //Edge of ball has hit bottom of screen
-            if (ballPosition.y > screenHeight - ballWidth) {
-                lives = lives - 1;
-                if (lives == 0) {
-                    lives = 3;
-                    score = 0;
-                    soundPool.play(sample4, 1, 1, 0, 0, 1);
-                }
-                ballPosition.y = 1 + ballWidth;
-                // back to top of screen
-                // choose horizontal direction for next ball
-                Random randomNumber = new Random();
-                int startX = randomNumber.nextInt(screenWidth - ballWidth) + 1;
-                ballPosition.x = startX + ballWidth;
-
-                int ballDirection = randomNumber.nextInt(3);
-                switch (ballDirection) {
-                    case 0:
-                        ballIsMovingLeft = true;
-                        ballIsMovingRight = false;
-                        break;
-                    case 1:
-                        ballIsMovingRight = true;
-                        ballIsMovingLeft = false;
-                        break;
-                    case 2:
-                        ballIsMovingLeft = false;
-                        ballIsMovingRight = false;
-                        break;
-                }
 
             }
+
+
 
             // hit the top of the screen
             if (ballPosition.y <= 0) {
                 ballIsMovingDown = true;
                 ballIsMovingUp = false;
                 ballPosition.y = 1;
-                soundPool.play(sample2, 1, 1, 0, 0, 1);
+
             }
-            // depending upon the two direcitons we should be mving in adjust our x any positions
-            if (ballIsMovingDown) ballPosition.y += 6;
-            if (ballIsMovingUp) ballPosition.y -= 10;
-            if (ballIsMovingLeft) ballPosition.x -= 12;
-            if (ballIsMovingRight) ballPosition.x += 12;
+
+            if(ballPosition.y>racketPosition.y+20){
+
+                //lives = lives - 1;
+                //if (lives < 1) {
+                //    lives = 3;
+                //    score = 0;
+                //    soundPool.play(sample4, 1, 1, 0, 0, 1);
+                //}
+                ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
+                ballPosition.x = racketPosition.x;
+
+            }
 
             // Has ball hit racket
             if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
                 int halfRacket = racketWidth / 2;
                 if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
-                    // rebound the vall vertically and play a sound
-                    soundPool.play(sample3, 1, 1, 0, 0, 1);
-                    score++;
+
                     ballIsMovingUp = true;
                     ballIsMovingDown = false;
+
                     // now decide how to rebound the ball horizontally
                     if (ballPosition.x < racketPosition.x) {
                         ballIsMovingRight = true;
@@ -253,18 +230,27 @@ public class lvl1 extends AppCompatActivity {
                     }
                 }
             }
+
+
+            // depending upon the two direcitons we should be mving in adjust our x any positions
+            if (ballIsMovingDown) ballPosition.y += 18;
+            if (ballIsMovingUp) ballPosition.y -= 30;
+            if (ballIsMovingLeft) ballPosition.x -= 36;
+            if (ballIsMovingRight) ballPosition.x += 36;
+
+
         }
 
         public void drawCourt() {
             if (ourHolder.getSurface().isValid()) {
                 canvas = ourHolder.lockCanvas();
 
-                //draw blocks
+                /*//draw blocks
                 for(int i = 0; i < numBricks; i++){
                     if(bricks[i].getAlive()) {
                         canvas.drawRect(bricks[i].getRect(), paint);
                     }
-                }
+                }*/
 
                 //Paint paint = new Paint();
                 canvas.drawColor(Color.argb(255, 51, 255, 153));//the background
@@ -272,7 +258,7 @@ public class lvl1 extends AppCompatActivity {
 
 
                 // Draw the squash racket
-                Log.i("Racket: ",racketPosition.x + ", " + racketPosition.y);
+
                 canvas.drawRect(
                         racketPosition.x - (racketWidth / 2),
                         racketPosition.y - (racketHeight / 2),
@@ -284,6 +270,7 @@ public class lvl1 extends AppCompatActivity {
                 ourHolder.unlockCanvasAndPost(canvas);
             }
         }
+
         public void controlFPS() {
             long timeThisFrame = (System.currentTimeMillis() - lastFrameTime);
             long timeToSleep = 15 - timeThisFrame;
@@ -371,5 +358,35 @@ public class lvl1 extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+
+
+    @Override
+    //create pull down options menu
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_items, menu);
+        return true;
+    }
+
+    @Override
+    //when item is selected
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.itmBack) {
+            Intent intent = new Intent(lvl1.this, MainActivity.class);
+            startActivity(intent);
+        }
+
+        if (id == R.id.itmReset) {
+
+
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 }

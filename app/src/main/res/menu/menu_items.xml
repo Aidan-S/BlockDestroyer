@@ -3,12 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/itmPause"
-        android:title="Pause" />
+        android:id="@+id/itmBack"
+        android:title="Back" />
     <item
         android:id="@+id/itmReset"
         android:title="Reset" />
-    <item
-        android:id="@+id/itmBack"
-        android:title="Back" />
 </menu>
