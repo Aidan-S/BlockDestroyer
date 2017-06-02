@@ -264,7 +264,21 @@ public class lvl3 extends AppCompatActivity {
             }
 
 
-            // depending upon the two direcitons we should be mving in adjust our x any positions
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            //detect if ball hits bricks
+            for(int i = 0; i < numBricks; i++) {
+                if(bricks[i].getAlive()) {
+                    if(bricks[i].isOverLapping(ball))
+                }
+            }
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // change x and y positions based on direction
             if (ballIsMovingDown) ballPosition.y += 18;
             if (ballIsMovingUp) ballPosition.y -= 30;
             if (ballIsMovingLeft) ballPosition.x -= 36;
