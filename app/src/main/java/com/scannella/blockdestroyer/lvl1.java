@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Random;
@@ -109,10 +110,11 @@ public class lvl1 extends AppCompatActivity {
 
         ballWidth = screenWidth / 35;
         ballPosition = new Point();
-        ballPosition.x = screenWidth / 2;
-        ballPosition.y = 1 + ballWidth;
+        ballPosition.x = racketPosition.x;
+        ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
 
         lives = 3;
+
     }
 
     class SquashCourtView extends SurfaceView implements Runnable {
@@ -156,17 +158,17 @@ public class lvl1 extends AppCompatActivity {
         }
 
         public void updateCourt() {
-            /*//create bricks
-                    brickWidth = screenWidth / 6 ;
-                    brickHeight = screenHeight / 13;
-                    numBricks = 0;
+            //create bricks
+            brickWidth = screenWidth / 6 ;
+            brickHeight = screenHeight / 13;
+            numBricks = 0;
 
                     for(int c = 0; c < 6; c++ ){
                         for(int r = 0; r < 3; r++ ){
                             bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
                             numBricks ++;
                         }
-                    }*/
+                    }
 
 
             if (racketIsMovingRight && racketPosition.x + (racketWidth/2)< screenWidth) {
@@ -176,17 +178,17 @@ public class lvl1 extends AppCompatActivity {
                 racketPosition.x = racketPosition.x - 25;
             }
 
-            // dtect collisions - ball hit right of screen
+            // detect collisions - ball hit right of screen
             if (ballPosition.x + ballWidth > screenWidth) {
                 ballIsMovingLeft = true;
                 ballIsMovingRight = false;
-
+                soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
             // ball hit left of screen
             if (ballPosition.x < 0) {
                 ballIsMovingLeft = false;
                 ballIsMovingRight = true;
-
+                soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
 
 
@@ -196,17 +198,18 @@ public class lvl1 extends AppCompatActivity {
                 ballIsMovingDown = true;
                 ballIsMovingUp = false;
                 ballPosition.y = 1;
-
+                soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
 
             if(ballPosition.y>racketPosition.y+20){
 
-                //lives = lives - 1;
-                //if (lives < 1) {
-                //    lives = 3;
-                //    score = 0;
-                //    soundPool.play(sample4, 1, 1, 0, 0, 1);
-                //}
+                lives = lives - 1;
+                if (lives < 1) {
+                    lives = 3;
+                    score = 0;
+                    soundPool.play(sample4, 1, 1, 0, 0, 1);
+
+                }
                 ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
                 ballPosition.x = racketPosition.x;
 
@@ -219,6 +222,7 @@ public class lvl1 extends AppCompatActivity {
 
                     ballIsMovingUp = true;
                     ballIsMovingDown = false;
+                    soundPool.play(sample3, 1, 1, 0, 0, 1);
 
                     // now decide how to rebound the ball horizontally
                     if (ballPosition.x < racketPosition.x) {
@@ -245,17 +249,19 @@ public class lvl1 extends AppCompatActivity {
             if (ourHolder.getSurface().isValid()) {
                 canvas = ourHolder.lockCanvas();
 
-                /*//draw blocks
+                //draw blocks
                 for(int i = 0; i < numBricks; i++){
                     if(bricks[i].getAlive()) {
                         canvas.drawRect(bricks[i].getRect(), paint);
                     }
-                }*/
+                }
 
                 //Paint paint = new Paint();
                 canvas.drawColor(Color.argb(255, 51, 255, 153));//the background
                 paint.setColor(Color.BLACK);
 
+                paint.setTextSize(45);
+                canvas.drawText("Score:" + score + "  Lives: " + lives, 20, 40, paint);
 
                 // Draw the squash racket
 
