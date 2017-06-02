@@ -233,7 +233,7 @@ public class lvl2 extends AppCompatActivity {
                     lives = 3;
                     score = 0;
                     soundPool.play(sample4, 1, 1, 0, 0, 1);
-                    Toast.makeText(lvl2.this, "You Lost, Stop it", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(lvl2.this, "You Lost, Stop it", Toast.LENGTH_SHORT).show();
                 }
                 ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
                 ballPosition.x = racketPosition.x;
@@ -279,9 +279,14 @@ public class lvl2 extends AppCompatActivity {
                 paint.setColor(Color.BLACK);
 
                 paint.setTextSize(45);
-                canvas.drawText("Score:" + score + "  Lives: " + lives, 20, 40, paint);
+                canvas.drawText("Score:" + score + "  Lives: " + lives, 40, racketPosition.y + 70, paint);
 
-
+                //draw blocks
+                for(int i = 0; i < numBricks; i++){
+                    if(bricks[i].getAlive()) {
+                        canvas.drawRect(bricks[i].getRect(), paint);
+                    }
+                }
                 // Draw the squash racket
 
                 canvas.drawRect(

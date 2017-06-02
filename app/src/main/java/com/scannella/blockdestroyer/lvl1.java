@@ -249,6 +249,9 @@ public class lvl1 extends AppCompatActivity {
             if (ourHolder.getSurface().isValid()) {
                 canvas = ourHolder.lockCanvas();
 
+                canvas.drawColor(Color.argb(255, 51, 255, 153));//the background
+                paint.setColor(Color.BLACK);
+
                 //draw blocks
                 for(int i = 0; i < numBricks; i++){
                     if(bricks[i].getAlive()) {
@@ -256,12 +259,11 @@ public class lvl1 extends AppCompatActivity {
                     }
                 }
 
-                //Paint paint = new Paint();
-                canvas.drawColor(Color.argb(255, 51, 255, 153));//the background
-                paint.setColor(Color.BLACK);
+
+
 
                 paint.setTextSize(45);
-                canvas.drawText("Score:" + score + "  Lives: " + lives, 20, 40, paint);
+                canvas.drawText("Score:" + score + "  Lives: " + lives, 40, racketPosition.y + 70, paint);
 
                 // Draw the squash racket
 
