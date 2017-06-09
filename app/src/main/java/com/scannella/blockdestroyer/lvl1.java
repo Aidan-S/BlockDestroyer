@@ -1,6 +1,5 @@
 package com.scannella.blockdestroyer;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -9,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -27,6 +27,7 @@ import java.util.Random;
 
 
 public class lvl1 extends AppCompatActivity {
+
     Canvas canvas;
     SquashCourtView squashCourtView;
 
@@ -99,6 +100,18 @@ public class lvl1 extends AppCompatActivity {
         screenWidth = size.x;
         screenHeight = size.y;
 
+        //create bricks
+        brickWidth = screenWidth / 6 ;
+        brickHeight = screenHeight / 13;
+        numBricks = 0;
+
+        for(int c = 0; c < 6; c++ ){
+            for(int r = 0; r < 3; r++ ){
+                bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
+                numBricks ++;
+            }
+        }
+
         // The game objects
         racketPosition = new Point();
         racketPosition.x = screenWidth / 2;
@@ -109,9 +122,11 @@ public class lvl1 extends AppCompatActivity {
         ballWidth = screenWidth / 35;
         ballPosition = new Point();
         ballPosition.x = racketPosition.x;
-        ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
+        ballPosition.y = racketPosition.y - (racketHeight/2) - ballWidth;
 
         lives = 3;
+
+
 
     }
 
@@ -156,18 +171,6 @@ public class lvl1 extends AppCompatActivity {
         }
 
         public void updateCourt() {
-            //create bricks
-            brickWidth = screenWidth / 6 ;
-            brickHeight = screenHeight / 13;
-            numBricks = 0;
-
-                    for(int c = 0; c < 6; c++ ){
-                        for(int r = 0; r < 3; r++ ){
-                            bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
-                            numBricks ++;
-                        }
-                    }
-
 
             if (racketIsMovingRight && racketPosition.x + (racketWidth/2)< screenWidth) {
                 racketPosition.x = racketPosition.x + 25;
@@ -192,31 +195,35 @@ public class lvl1 extends AppCompatActivity {
 
 
             // hit the top of the screen
-            if (ballPosition.y <= 0) {
+            if (ballPosition.y < 0) {
                 ballIsMovingDown = true;
                 ballIsMovingUp = false;
                 ballPosition.y = 1;
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
 
-            if(ballPosition.y>racketPosition.y+20){
+            //ball goes past paddle
+            if(ballPosition.y + ballWidth > racketPosition.y + racketHeight/2 + 20 +50){
 
                 lives = lives - 1;
                 if (lives < 1) {
                     lives = 3;
                     score = 0;
                     soundPool.play(sample4, 1, 1, 0, 0, 1);
-
+                    Intent intent = new Intent(lvl1.this, MainActivity.class);
+                    startActivity(intent);
+                    //Toast.makeText(lvl3.this, "You Lost, Stop it", Toast.LENGTH_SHORT).show();
                 }
-                ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
+                ballPosition.y = racketPosition.y - (racketHeight/2) - ballWidth;
                 ballPosition.x = racketPosition.x;
 
             }
 
             // Has ball hit racket
-            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
+            if (ballPosition.y + ballWidth > racketPosition.y - racketHeight/2) {
                 int halfRacket = racketWidth / 2;
-                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
+                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket)
+                        && ballPosition.x < (racketPosition.x + halfRacket)) {
 
                     ballIsMovingUp = true;
                     ballIsMovingDown = false;
@@ -234,11 +241,66 @@ public class lvl1 extends AppCompatActivity {
             }
 
 
-            // depending upon the two direcitons we should be mving in adjust our x any positions
-            if (ballIsMovingDown) ballPosition.y += 18;
-            if (ballIsMovingUp) ballPosition.y -= 30;
-            if (ballIsMovingLeft) ballPosition.x -= 36;
-            if (ballIsMovingRight) ballPosition.x += 36;
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            //detect if ball hits bricks
+            if( ballPosition.y < 551 )
+            {
+                int numBrick = 0;
+                for(int c = 0; c < 6; c++ ){
+                    for(int r = 0; r < 3; r++ ){
+                        //bricks[numBrick] = new block(brickWidth, brickHeight, r, c);
+                        RectF tmpRect = bricks[numBrick].getRect();
+                        if( bricks[numBrick].getAlive() ) {
+                            // Check if upper left corner enters a brick
+                            if( ballPosition.y < tmpRect.bottom
+                                    && ballPosition.y > tmpRect.top
+                                    && ballPosition.x > tmpRect.left
+                                    && ballPosition.x < tmpRect.right ){
+                                bricks[numBrick].hit();
+
+                                ballIsMovingDown = true;
+                                ballIsMovingUp = false;
+                                soundPool.play(sample1, 1, 1, 0, 0, 1);
+                            }
+                            // Check if upper right corner enters a brick
+                            if( ballPosition.y < tmpRect.bottom
+                                    && ballPosition.y > tmpRect.top
+                                    && ballPosition.x + ballWidth > tmpRect.left
+                                    && ballPosition.x + ballWidth < tmpRect.right ){
+                                bricks[numBrick].hit();
+
+                                ballIsMovingDown = true;
+                                ballIsMovingUp = false;
+                                soundPool.play(sample1, 1, 1, 0, 0, 1);
+                            }
+                        }
+                        numBrick++;
+                    }
+                }
+            }
+
+            score = 360;
+            for(int i = 0; i < numBricks; i++){
+                if(bricks[i].getAlive()) {
+                    score -= 20;
+                }
+            }
+
+            if(score == 360){
+                //MainActivity.points.setText("You got 360");
+
+                Intent intent = new Intent(lvl1.this, MainActivity.class);
+                startActivity(intent);
+            }
+
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            if (ballIsMovingDown) ballPosition.y += 8;
+            if (ballIsMovingUp) ballPosition.y -= 8;
+            if (ballIsMovingLeft) ballPosition.x -= 8;
+            if (ballIsMovingRight) ballPosition.x += 8;
 
 
         }
@@ -247,8 +309,12 @@ public class lvl1 extends AppCompatActivity {
             if (ourHolder.getSurface().isValid()) {
                 canvas = ourHolder.lockCanvas();
 
+
                 canvas.drawColor(Color.argb(255, 51, 255, 153));//the background
                 paint.setColor(Color.BLACK);
+
+                paint.setTextSize(45);
+                canvas.drawText("Score:" + score + "  Lives: " + lives, 40, racketPosition.y + 70, paint);
 
                 //draw blocks
                 for(int i = 0; i < numBricks; i++){
@@ -257,14 +323,7 @@ public class lvl1 extends AppCompatActivity {
                     }
                 }
 
-
-
-
-                paint.setTextSize(45);
-                canvas.drawText("Score:" + score + "  Lives: " + lives, 40, racketPosition.y + 70, paint);
-
                 // Draw the squash racket
-
                 canvas.drawRect(
                         racketPosition.x - (racketWidth / 2),
                         racketPosition.y - (racketHeight / 2),
@@ -388,10 +447,13 @@ public class lvl1 extends AppCompatActivity {
             startActivity(intent);
         }
 
-        if (id == R.id.itmPlay) {
-
-
+        if (id == R.id.itmPause) {
+            onPause();
         }
+        if (id == R.id.itmPlay) {
+            onResume();
+        }
+
         return super.onOptionsItemSelected(item);
 
     }
