@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -121,7 +122,7 @@ public class lvl3 extends AppCompatActivity {
         ballWidth = screenWidth / 35;
         ballPosition = new Point();
         ballPosition.x = racketPosition.x;
-        ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
+        ballPosition.y = racketPosition.y - (racketHeight/2) - ballWidth;
 
         lives = 3;
 
@@ -179,13 +180,13 @@ public class lvl3 extends AppCompatActivity {
             }
 
             // detect collisions - ball hit right of screen
-            if (ballPosition.x > screenWidth) {
+            if (ballPosition.x + ballWidth > screenWidth) {
                 ballIsMovingLeft = true;
                 ballIsMovingRight = false;
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
             // ball hit left of screen
-            if (ballPosition.x - ballWidth < 0) {
+            if (ballPosition.x < 0) {
                 ballIsMovingLeft = false;
                 ballIsMovingRight = true;
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
@@ -194,14 +195,14 @@ public class lvl3 extends AppCompatActivity {
 
 
             // hit the top of the screen
-            if (ballPosition.y <= 0) {
+            if (ballPosition.y < 0) {
                 ballIsMovingDown = true;
                 ballIsMovingUp = false;
                 ballPosition.y = 1;
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
 
-            if(ballPosition.y>racketPosition.y+20){
+            if(ballPosition.y + ballWidth > racketPosition.y + racketHeight/2          +20    + 50    ){
 
                 lives = lives - 1;
                 if (lives < 1) {
@@ -210,15 +211,16 @@ public class lvl3 extends AppCompatActivity {
                     soundPool.play(sample4, 1, 1, 0, 0, 1);
                     //Toast.makeText(lvl3.this, "You Lost, Stop it", Toast.LENGTH_SHORT).show();
                 }
-                ballPosition.y = racketPosition.y - (racketHeight/2) - 10;
+                ballPosition.y = racketPosition.y - (racketHeight/2) - ballWidth;
                 ballPosition.x = racketPosition.x;
 
             }
 
             // Has ball hit racket
-            if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
+            if (ballPosition.y + ballWidth > racketPosition.y - racketHeight/2) {
                 int halfRacket = racketWidth / 2;
-                if (ballPosition.x > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
+                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket)
+                        && ballPosition.x < (racketPosition.x + halfRacket)) {
 
                     ballIsMovingUp = true;
                     ballIsMovingDown = false;
@@ -239,7 +241,39 @@ public class lvl3 extends AppCompatActivity {
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
             //detect if ball hits bricks
-
+            if( ballPosition.y < 551 )
+            {
+                int numBrick = 0;
+                for(int c = 0; c < 6; c++ ){
+                    for(int r = 0; r < 3; r++ ){
+                        //bricks[numBrick] = new block(brickWidth, brickHeight, r, c);
+                        RectF tmpRect = bricks[numBrick].getRect();
+                        if( bricks[numBrick].getAlive() ) {
+                            // Check if upper left corner enters a brick
+                            if( ballPosition.y < tmpRect.bottom
+                                    && ballPosition.y > tmpRect.top
+                                    && ballPosition.x > tmpRect.left
+                                    && ballPosition.x < tmpRect.right ){
+                                bricks[numBrick].hit();
+                                ballIsMovingDown = true;
+                                ballIsMovingUp = false;
+                                soundPool.play(sample1, 1, 1, 0, 0, 1);
+                            }
+                            // Check if upper right corner enters a brick
+                            if( ballPosition.y < tmpRect.bottom
+                                    && ballPosition.y > tmpRect.top
+                                    && ballPosition.x + ballWidth > tmpRect.left
+                                    && ballPosition.x + ballWidth < tmpRect.right ){
+                                bricks[numBrick].hit();
+                                ballIsMovingDown = true;
+                                ballIsMovingUp = false;
+                                soundPool.play(sample1, 1, 1, 0, 0, 1);
+                            }
+                        }
+                        numBrick++;
+                    }
+                }
+            }
 
 
 
@@ -247,10 +281,16 @@ public class lvl3 extends AppCompatActivity {
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
             // change x and y positions based on direction
-            if (ballIsMovingDown) ballPosition.y += 18;
-            if (ballIsMovingUp) ballPosition.y -= 30;
-            if (ballIsMovingLeft) ballPosition.x -= 36;
-            if (ballIsMovingRight) ballPosition.x += 36;
+            //if (ballIsMovingDown) ballPosition.y += 18;
+            //if (ballIsMovingUp) ballPosition.y -= 30;
+            //if (ballIsMovingLeft) ballPosition.x -= 36;
+            //if (ballIsMovingRight) ballPosition.x += 36;
+
+
+            if (ballIsMovingDown) ballPosition.y += 12;
+            if (ballIsMovingUp) ballPosition.y -= 12;
+            if (ballIsMovingLeft) ballPosition.x -= 12;
+            if (ballIsMovingRight) ballPosition.x += 12;
 
 
         }
