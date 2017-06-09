@@ -11,9 +11,8 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,7 +21,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Random;
@@ -390,7 +388,7 @@ public class lvl1 extends AppCompatActivity {
             startActivity(intent);
         }
 
-        if (id == R.id.itmReset) {
+        if (id == R.id.itmPlay) {
 
 
         }

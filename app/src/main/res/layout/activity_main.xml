@@ -36,6 +36,15 @@
             android:layout_weight="0.01"
             app:srcCompat="@drawable/lvl3but" />
 
+        <TextView
+            android:id="@+id/txtPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Get 360 Points"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

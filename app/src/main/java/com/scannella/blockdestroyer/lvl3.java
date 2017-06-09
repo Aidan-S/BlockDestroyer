@@ -202,13 +202,16 @@ public class lvl3 extends AppCompatActivity {
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
 
-            if(ballPosition.y + ballWidth > racketPosition.y + racketHeight/2          +20    + 50    ){
+            //ball goes past paddle
+            if(ballPosition.y + ballWidth > racketPosition.y + racketHeight/2 + 20 +50){
 
                 lives = lives - 1;
                 if (lives < 1) {
                     lives = 3;
                     score = 0;
                     soundPool.play(sample4, 1, 1, 0, 0, 1);
+                    Intent intent = new Intent(lvl3.this, MainActivity.class);
+                    startActivity(intent);
                     //Toast.makeText(lvl3.this, "You Lost, Stop it", Toast.LENGTH_SHORT).show();
                 }
                 ballPosition.y = racketPosition.y - (racketHeight/2) - ballWidth;
@@ -255,6 +258,7 @@ public class lvl3 extends AppCompatActivity {
                                     && ballPosition.x > tmpRect.left
                                     && ballPosition.x < tmpRect.right ){
                                 bricks[numBrick].hit();
+
                                 ballIsMovingDown = true;
                                 ballIsMovingUp = false;
                                 soundPool.play(sample1, 1, 1, 0, 0, 1);
@@ -265,6 +269,7 @@ public class lvl3 extends AppCompatActivity {
                                     && ballPosition.x + ballWidth > tmpRect.left
                                     && ballPosition.x + ballWidth < tmpRect.right ){
                                 bricks[numBrick].hit();
+
                                 ballIsMovingDown = true;
                                 ballIsMovingUp = false;
                                 soundPool.play(sample1, 1, 1, 0, 0, 1);
@@ -275,22 +280,27 @@ public class lvl3 extends AppCompatActivity {
                 }
             }
 
+            score = 360;
+            for(int i = 0; i < numBricks; i++){
+                if(bricks[i].getAlive()) {
+                    score -= 20;
+                }
+            }
 
+            if(score == 360){
+                //MainActivity.points.setText("You got 360");
 
+                Intent intent = new Intent(lvl3.this, MainActivity.class);
+                startActivity(intent);
+            }
 
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-            // change x and y positions based on direction
-            //if (ballIsMovingDown) ballPosition.y += 18;
-            //if (ballIsMovingUp) ballPosition.y -= 30;
-            //if (ballIsMovingLeft) ballPosition.x -= 36;
-            //if (ballIsMovingRight) ballPosition.x += 36;
 
-
-            if (ballIsMovingDown) ballPosition.y += 12;
-            if (ballIsMovingUp) ballPosition.y -= 12;
-            if (ballIsMovingLeft) ballPosition.x -= 12;
-            if (ballIsMovingRight) ballPosition.x += 12;
+            if (ballIsMovingDown) ballPosition.y += 24;
+            if (ballIsMovingUp) ballPosition.y -= 24;
+            if (ballIsMovingLeft) ballPosition.x -= 24;
+            if (ballIsMovingRight) ballPosition.x += 24;
 
 
         }
@@ -299,7 +309,7 @@ public class lvl3 extends AppCompatActivity {
             if (ourHolder.getSurface().isValid()) {
                 canvas = ourHolder.lockCanvas();
 
-                //Paint paint = new Paint();
+
                 canvas.drawColor(Color.argb(255, 255, 51, 51));//the background
                 paint.setColor(Color.BLACK);
 
@@ -437,10 +447,13 @@ public class lvl3 extends AppCompatActivity {
             startActivity(intent);
         }
 
-        if (id == R.id.itmReset) {
-
-
+        if (id == R.id.itmPause) {
+            onPause();
         }
+        if (id == R.id.itmPlay) {
+            onResume();
+        }
+
         return super.onOptionsItemSelected(item);
 
     }

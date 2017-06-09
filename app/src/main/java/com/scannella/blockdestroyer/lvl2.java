@@ -1,51 +1,25 @@
 package com.scannella.blockdestroyer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.graphics.Matrix;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Handler;
-import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Display;
-import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-
-
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.Random;
@@ -412,7 +386,7 @@ public class lvl2 extends AppCompatActivity {
             startActivity(intent);
         }
 
-        if (id == R.id.itmReset) {
+        if (id == R.id.itmPlay) {
 
 
         }

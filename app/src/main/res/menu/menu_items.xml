@@ -6,6 +6,9 @@
         android:id="@+id/itmBack"
         android:title="Back" />
     <item
-        android:id="@+id/itmReset"
-        android:title="Reset" />
+        android:id="@+id/itmPause"
+        android:title="Pause" />
+    <item
+        android:id="@+id/itmPlay"
+        android:title="Resume" />
 </menu>
