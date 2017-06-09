@@ -218,7 +218,7 @@ public class lvl3 extends AppCompatActivity {
             // Has ball hit racket
             if (ballPosition.y + ballWidth >= (racketPosition.y - racketHeight / 2)) {
                 int halfRacket = racketWidth / 2;
-                if (ballPosition.x + ballWidth > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
+                if (ballPosition.x > (racketPosition.x - halfRacket) && ballPosition.x - ballWidth < (racketPosition.x + halfRacket)) {
 
                     ballIsMovingUp = true;
                     ballIsMovingDown = false;
