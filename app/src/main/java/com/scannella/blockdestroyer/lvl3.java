@@ -99,6 +99,18 @@ public class lvl3 extends AppCompatActivity {
         screenWidth = size.x;
         screenHeight = size.y;
 
+        //create bricks
+        brickWidth = screenWidth / 6 ;
+        brickHeight = screenHeight / 13;
+        numBricks = 0;
+
+        for(int c = 0; c < 6; c++ ){
+            for(int r = 0; r < 3; r++ ){
+                bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
+                numBricks ++;
+            }
+        }
+
         // The game objects
         racketPosition = new Point();
         racketPosition.x = screenWidth / 2;
@@ -158,18 +170,6 @@ public class lvl3 extends AppCompatActivity {
         }
 
         public void updateCourt() {
-            //create bricks
-            brickWidth = screenWidth / 6 ;
-            brickHeight = screenHeight / 13;
-            numBricks = 0;
-
-            for(int c = 0; c < 6; c++ ){
-                for(int r = 0; r < 3; r++ ){
-                    bricks[numBricks] = new block(brickWidth, brickHeight, r, c);
-                    numBricks ++;
-                }
-            }
-
 
             if (racketIsMovingRight && racketPosition.x + (racketWidth/2)< screenWidth) {
                 racketPosition.x = racketPosition.x + 25;
@@ -179,13 +179,13 @@ public class lvl3 extends AppCompatActivity {
             }
 
             // detect collisions - ball hit right of screen
-            if (ballPosition.x + ballWidth > screenWidth) {
+            if (ballPosition.x > screenWidth) {
                 ballIsMovingLeft = true;
                 ballIsMovingRight = false;
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
             }
             // ball hit left of screen
-            if (ballPosition.x < 0) {
+            if (ballPosition.x - ballWidth < 0) {
                 ballIsMovingLeft = false;
                 ballIsMovingRight = true;
                 soundPool.play(sample1, 1, 1, 0, 0, 1);
